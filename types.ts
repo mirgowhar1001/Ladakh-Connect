@@ -3,6 +3,7 @@ export type UserRole = 'passenger' | 'owner';
 export type TripStatus = 'BOOKED' | 'EN_ROUTE' | 'ARRIVED' | 'COMPLETED';
 
 export interface User {
+  uid?: string; // Firebase Auth UID
   name: string;
   mobile: string;
   role: UserRole;
@@ -33,9 +34,9 @@ export interface ChatMessage {
 }
 
 export interface RideOffer {
-  id: number;
+  id: string; // Changed to string for Firestore
   driverName: string;
-  driverId: string; // mobile or name acting as ID
+  driverId: string; // mobile or auth uid
   vehicleNo: string;
   vehicleType: string;
   from: string;
@@ -49,7 +50,7 @@ export interface RideOffer {
 }
 
 export interface Trip {
-  id: number;
+  id: string; // Changed to string for Firestore
   from: string;
   to: string;
   date: string;
@@ -61,8 +62,8 @@ export interface Trip {
   vehicleType: string;
   seats: number[];
   messages: ChatMessage[];
-  offerId?: number; // Link to the original offer
-  userRating?: number; // Rating given by passenger
+  offerId?: string; // Changed to string
+  userRating?: number;
 }
 
 export interface RouteDef {

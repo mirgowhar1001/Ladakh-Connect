@@ -256,10 +256,10 @@ export const PassengerFlow: React.FC = () => {
   // Now supports both generic VehicleDef and specific RideOffer
   const [selectedRide, setSelectedRide] = useState<(VehicleDef & Partial<RideOffer> & { price: number, driver?: any }) | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const [chatTripId, setChatTripId] = useState<number | null>(null);
+  const [chatTripId, setChatTripId] = useState<string | null>(null);
   
   // Rating State
-  const [ratingModal, setRatingModal] = useState<{tripId: number, driverName: string} | null>(null);
+  const [ratingModal, setRatingModal] = useState<{tripId: string, driverName: string} | null>(null);
 
   const swapLocations = () => {
     setSearchParams(prev => ({ ...prev, from: prev.to, to: prev.from }));
@@ -592,7 +592,7 @@ export const PassengerFlow: React.FC = () => {
     );
   };
 
-  const RatingModal = ({ tripId, driverName, onClose }: { tripId: number, driverName: string, onClose: () => void }) => {
+  const RatingModal = ({ tripId, driverName, onClose }: { tripId: string, driverName: string, onClose: () => void }) => {
     const [stars, setStars] = useState(0);
     
     const submitRating = () => {
@@ -919,8 +919,8 @@ export const PassengerFlow: React.FC = () => {
     if (!selectedRide) return null;
     const totalCost = selectedSeats.length * selectedRide.price;
 
-    const handlePayment = () => {
-      const success = bookTrip({
+    const handlePayment = async () => {
+      const success = await bookTrip({
         from: searchParams.from,
         to: searchParams.to,
         date: searchParams.date,
@@ -997,7 +997,7 @@ export const PassengerFlow: React.FC = () => {
   };
 
   const BookingHistory = () => {
-    const [expandedTripId, setExpandedTripId] = useState<number | null>(null);
+    const [expandedTripId, setExpandedTripId] = useState<string | null>(null);
 
     return (
       <div className="bg-[#f2f2f2] min-h-screen pb-20">
@@ -1088,7 +1088,7 @@ export const PassengerFlow: React.FC = () => {
                        </div>
 
                        <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg mb-4">
-                          Booking ID: <span className="font-bold text-gray-800 uppercase">LC{trip.id}</span>
+                          Booking ID: <span className="font-bold text-gray-800 uppercase">LC{trip.id.substring(0,8)}</span>
                        </div>
                        
                        <div className="flex gap-3">
@@ -1099,10 +1099,10 @@ export const PassengerFlow: React.FC = () => {
                              Download Invoice
                           </button>
                           <button 
-                             onClick={() => setExpandedTripId(null)}
+                             onClick={() => setChatTripId(trip.id)}
                              className="flex-1 py-3 bg-blue-600 text-white rounded-lg font-bold text-sm"
                           >
-                             Done
+                             Chat
                           </button>
                        </div>
                     </div>
@@ -1121,7 +1121,7 @@ export const PassengerFlow: React.FC = () => {
     case 'seats': return <SeatMap />;
     case 'vault_pay': return <VaultPayment />;
     case 'history': return <BookingHistory />;
-    case 'chat': return chatTripId ? <ChatScreen tripId={chatTripId} onBack={() => setView('history')} /> : <BookingHistory />;
+    case 'chat': return chatTripId ? <ChatScreen tripId={chatTripId} onBack={() => { setChatTripId(null); setView('history'); }} /> : <BookingHistory />;
     case 'profile': return <PassengerProfile />;
     default: return <SearchWidget />;
   }

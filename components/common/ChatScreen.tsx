@@ -3,7 +3,7 @@ import { Send, ChevronLeft } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 interface ChatScreenProps {
-  tripId: number;
+  tripId: string;
   onBack: () => void;
 }
 
@@ -44,7 +44,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ tripId, onBack }) => {
         <div>
            <h2 className="font-bold text-gray-800">{otherName}</h2>
            <p className="text-xs text-green-600 flex items-center gap-1">
-             <span className="w-2 h-2 rounded-full bg-green-500"></span> Active Trip #{tripId}
+             <span className="w-2 h-2 rounded-full bg-green-500"></span> Active Trip
            </p>
         </div>
       </div>

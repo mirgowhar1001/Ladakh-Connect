@@ -9,7 +9,7 @@ type OwnerView = 'home' | 'history' | 'profile';
 
 export const OwnerDashboard: React.FC = () => {
   const { user, trips, driverBalance, updateTripStatus, logout, publishRide } = useApp();
-  const [activeChatTripId, setActiveChatTripId] = useState<number | null>(null);
+  const [activeChatTripId, setActiveChatTripId] = useState<string | null>(null);
   const [showAddRide, setShowAddRide] = useState(false);
   const [currentView, setCurrentView] = useState<OwnerView>('home');
 
